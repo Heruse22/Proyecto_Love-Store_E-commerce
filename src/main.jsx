@@ -1,18 +1,18 @@
-import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
-import Layout from "./components/templates/Layout"
-import Gallery from "./components/organisms/gallery/Gallery"
-import Login from "./components/organisms/login/Login"
-import Register from "./components/organisms/register/Register"
-import Profile from "./components/organisms/profile/Profile"
-import ProductDetail from "./components/organisms/productDetail/ProductDetail"
-import Cart from "./components/organisms/cart/Cart"
-import Checkout from "./components/organisms/checkout/Checkout"
+import { StrictMode } from "react";
+import { createRoot } from "react-dom/client";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import Layout from "./components/templates/Layout";
+import Gallery from "./components/organisms/gallery/Gallery";
+import Login from "./components/organisms/login/Login";
+import Register from "./components/organisms/register/Register";
+import Profile from "./components/organisms/profile/Profile";
+import ProductDetail from "./components/organisms/productDetail/ProductDetail";
+import Cart from "./components/organisms/cart/Cart";
+import Checkout from "./components/organisms/checkout/Checkout";
 
-createRoot(document.getElementById('root')).render(
+createRoot(document.getElementById("root")).render(
   <StrictMode>
-        <BrowserRouter basename={import.meta.env.BASE_URL}>
+    <BrowserRouter basename={import.meta.env.BASE_URL}>
       <Routes>
         <Route path="/" element={<Layout />}>
           <Route index element={<Navigate to="/gallery" replace />} />
@@ -27,4 +27,5 @@ createRoot(document.getElementById('root')).render(
       </Routes>
     </BrowserRouter>
   </StrictMode>,
-)
+);
+

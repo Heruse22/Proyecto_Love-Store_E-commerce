@@ -1,14 +1,23 @@
 <!doctype html>
-<html lang="en">
+<html lang="es">
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="./src/styles/main.css" >
-    <title>reto_frontend</title>
+    <link rel="stylesheet" href="./src/styles/main.css" />
+    <title>Love Store</title>
   </head>
   <body>
-    <div id="root"></div>
-    <script type="module" src="./src/main.jsx"></script>
+    <!-- <div id="root"></div> -->
+    <header>
+      <img src="img/logo.png" alt="Logo Velas" height="60" />
+      <h1>Love Store</h1>
+    </header>
+    <main>
+      <section id="productos" class="grid-productos"></section>
+    </main>
   </body>
+  <script src="js/api.js"></script>
+  <script type="module" src="./src/main.jsx"></script>
+  <script src="js/main.js"></script>
 </html>
