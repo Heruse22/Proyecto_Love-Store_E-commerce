@@ -1,0 +1,70 @@
+/* Este será el centro de control de todos los colores y tamaños de la página, para que sea más fácil hacer cambios globales. */
+
+@import url("https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Jost:wght@300;400;500&display=swap");
+:root {
+/* Paleta de colores */
+--beige-fondo: #c9b5a0;
+--crema-claro: #EDE0D4;
+--crema-blanco: #FAF5EE;
+--marron-texto: #2B1810;
+--rosa-vibrante: #E84B8A;
+--rosa-suave: #F2A8C4;
+--morado: #8B3590;
+--dorado: #C89040;
+--negro-precio: #1C1614;
+
+/* Tipógrafía */
+--fuente-titulo: 'Cormorant Garamond', serif; /* Para títulos */
+--fuente-cuerpo: 'Jost', sans-serif; /* Para precios y descripciones */
+
+/* Espaciado */
+--espaciado-s: 8px;
+--espaciado-m: 16px;
+--espaciado-l: 32px;
+--espaciado-xl: 64px;
+
+/* Bordes */
+--radio-tarjeta: 16px;
+--sombra-suave: 0 4px 20px rgba(43, 24, 16, 0.10);
+--sombra-hover: 0 8px 32px rgba(232, 75, 138, 0.18);
+
+}
+
+/* Retirar margenes y estilos establecidos por defecto y añadir estilos personalizados */
+
+*, *::before, *::after {
+margin: 0;
+padding: 0;
+box-sizing: border-box;
+}
+
+body {
+    font-family: var(--fuente-cuerpo);
+    background-color: var(--crema-blanco);
+    color: var(--marron-texto);
+    line-height: 1.6;
+    min-height: 100vh;
+}
+
+img {
+    max-width: 100%;
+    display: block;
+}
+
+header {
+    background-color: var(--beige-fondo);
+    border-bottom: 3px solid var(--dorado);
+    padding: var(--espaciado-m) var(--espaciado-l);
+    display: flex;
+    align-items: center;
+    gap: var(--espaciado-m);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: var(--sombra-suave);
+}
+
+header img {
+    height: 60px;
+    width: auto;
+}
