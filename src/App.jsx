@@ -1,23 +1,39 @@
+import { useEffect } from 'react'
 import MainLayout from './components/templates/MainLayout'
 import ProductList from './components/organisms/ProductList'
 import SearchBar from './components/molecules/SearchBar'
-import MOCK_PRODUCTS from './mockdata/products'
-import CATEGORIAS from './mockdata/categories'
-import { useState } from 'react'
+// import MOCK_PRODUCTS from './mockdata/products'
+// import CATEGORIAS from './mockdata/categories'
+// import { useState } from 'react'
+import useProductStore from './store/productStore'
+import useCartStore from './store/cartStore'
 
 function App() {
-    const [busqueda, setBusqueda] = useState('')
-    const [carrito, setCarrito] = useState([])
 
-    const agregarAlCarrito = (producto) => {
-        setCarrito(prev => [...prev, producto])
-        alert(`✅ "${productos.nombre || producto.title}" agregado al carrito.`)
-    }
+    const busqueda = useProductStore(state => state.busqueda)
+    const setBusqueda = useProductStore(state => state.setBusqueda)
+    const cargando = useProductStore(state => state.cargando)
+    const error = useProductStore(state => state.error)
+    const cargarProductos = useProductStore(state => state.cargarProductos)
+    const getProductosFiltrados = useProductStore(
+    state => state.getProductosFiltrados)
 
-    const productosFiltrados = MOCK_PRODUCTS.filter(p => 
-        p.nombre.toLowerCase().includes(busqueda.toLowerCase()))
+    
+    const agregarItem = useCartStore(state => state.agregarItem)
+    const totalItems = useCartStore(
+    state => state.items.reduce((total, item) => total + item.cantidad, 0)
+        )
+    
+    // Carga los productos al montar la app
+    useEffect(() => {
+    cargarProductos()
+    }, [])
+    
+    const productosFiltrados = getProductosFiltrados()
+    
+
   return (
-    <MainLayout totalItemsCarrito={carrito.length}>
+    <MainLayout totalItemsCarrito={totalItems}>
 
       {/* Barra de búsqueda */}
       <div style={{
@@ -46,7 +62,9 @@ function App() {
       {/* Galería de productos */}
       <ProductList
         productos={productosFiltrados}
-        onAgregar={agregarAlCarrito}
+        onAgregar={agregarItem}
+        cargando={cargando}
+        error={error}
       />
 
     </MainLayout>

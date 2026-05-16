@@ -1,93 +1,99 @@
 import { create } from "zustand";
-import { createJSONStorage, persist } from "zustand/middleware";
+import { persist } from "zustand/middleware";
 
-const STORAGE_KEY = "template-cart-store";
 
 const useCartStore = create(
   persist(
     (set, get) => ({
       items: [],
 
-      addItem: (product, quantity = 1) => {
-        const parsedQuantity = Math.max(1, Number(quantity) || 1);
-        const existing = get().items.find(
-          (item) => Number(item.product.id) === Number(product.id),
-        );
+      // Agrega un producto al carrito
+      agregarItem: (producto) => {
+        
+        const items = get().items
+        const existe = items.find(item => item.producto.id === producto.id)
 
-        if (existing) {
+         if (existe) {
+
           set({
-            items: get().items.map((item) =>
-              Number(item.product.id) === Number(product.id)
-                ? { ...item, quantity: item.quantity + parsedQuantity }
-                : item,
-            ),
-          });
-          return;
+            items: items.map(item =>
+              item.producto.id === producto.id
+                ? { ...item, cantidad: item.cantidad + 1 }
+                : item
+            )
+          })
+          } else {
+            set({ items: [...items, { producto, cantidad: 1 }] })
         }
 
-        set({ items: [...get().items, { product, quantity: parsedQuantity }] });
       },
 
-      updateItemQuantity: (id, quantity) => {
-        const parsedQuantity = Number(quantity) || 0;
-        if (parsedQuantity <= 0) {
+      // Elimina un producto del carrito
+
+      quitarItem: (productoId) => {
+        set({
+          items: get().items.filter(item => item.producto.id !== productoId)
+        })
+      },
+
+      // Aumenta en 1 la cantidad de un producto
+
+      aumentarCantidad: (productoId) => {
+        set({
+          items: get().items.map(item =>
+            item.producto.id === productoId
+              ? { ...item, cantidad: item.cantidad + 1 }
+              : item
+          )
+        })
+      },
+
+      // Reduce en 1 la cantidad — si llega a 0 lo elimina
+      reducirCantidad: (productoId) => {
+        const items = get().items
+        const item = items.find(i => i.producto.id === productoId)
+
+        if (item && item.cantidad === 1) {
+          // Si es el último, lo elimina del carrito
+          get().quitarItem(productoId)
+        } else {
           set({
-            items: get().items.filter(
-              (item) => Number(item.product.id) !== Number(id),
-            ),
-          });
-          return;
+            items: items.map(item =>
+              item.producto.id === productoId
+                ? { ...item, cantidad: item.cantidad - 1 }
+                : item
+            )
+          })
         }
-
-        set({
-          items: get().items.map((item) =>
-            Number(item.product.id) === Number(id)
-              ? { ...item, quantity: parsedQuantity }
-              : item,
-          ),
-        });
       },
 
-      incrementItem: (id) => {
-        const item = get().items.find(
-          (cartItem) => Number(cartItem.product.id) === Number(id),
-        );
-        if (!item) return;
-        get().updateItemQuantity(id, item.quantity + 1);
+      // Vacía el carrito completo (se usará en Checkout)
+      vaciarCarrito: () => set({ items: [] }),
+
+    
+
+      // Total de unidades en el carrito (para el contador del header)
+      getTotalItems: () => {
+        return get().items.reduce(
+          (total, item) => total + item.cantidad, 0
+        )
       },
 
-      decrementItem: (id) => {
-        const item = get().items.find(
-          (cartItem) => Number(cartItem.product.id) === Number(id),
-        );
-        if (!item) return;
-        get().updateItemQuantity(id, item.quantity - 1);
-      },
-
-      removeItem: (id) => {
-        set({
-          items: get().items.filter(
-            (item) => Number(item.product.id) !== Number(id),
-          ),
-        });
-      },
-
-      clearCart: () => set({ items: [] }),
-
-      getTotalItems: () =>
-        get().items.reduce((sum, item) => sum + Number(item.quantity), 0),
-
-      getTotalPrice: () =>
-        get().items.reduce(
-          (sum, item) => sum + Number(item.product.price) * Number(item.quantity),
-          0,
-        ),
+      // Precio total del carrito
+      getTotalPrecio: () => {
+        return get().items.reduce((total, item) => {
+          const precio = item.producto.precio || item.producto.price || 0
+          return total + precio * item.cantidad
+        }, 0)
+      }
     }),
-    {
-      name: STORAGE_KEY,
-      storage: createJSONStorage(() => localStorage),
-    },
-  ),
-);
 
+  
+    {
+      name: 'love-store-carrito', // Nombre en localStorage
+    }
+  )
+)
+
+        
 export default useCartStore;

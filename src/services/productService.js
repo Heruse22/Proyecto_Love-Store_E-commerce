@@ -1,18 +1,49 @@
-import MOCK_PRODUCTS from "../mockdata/mock_products";
+import axios from 'axios'
 
-export const getProducts = async () => {
-  // TODO ESTUDIANTE:
-  // Reemplaza este retorno local por FakeStore API.
-  // Ejemplo esperado: GET https://fakestoreapi.com/products
-  return [...MOCK_PRODUCTS].sort((a, b) => Number(a.id) - Number(b.id));
-};
+const BASE_URL = 'https://fakestoreapi.com'
 
-export const getProductById = async (id) => {
-  // TODO ESTUDIANTE:
-  // Reemplaza esta busqueda local por FakeStore API.
-  // Ejemplo esperado: GET https://fakestoreapi.com/products/{id}
-  const product = MOCK_PRODUCTS.find(
-    (item) => Number(item.id) === Number(id),
-  );
-  return product ?? null;
-};
+// Trae todos los productos de la API
+export const obtenerProductos = async () => {
+  try {
+    const respuesta = await axios.get(`${BASE_URL}/products`)
+    return respuesta.data
+  } catch (error) {
+    console.error('Error al obtener productos:', error)
+    throw error
+  }
+}
+
+// Trae un producto por su ID
+export const obtenerProductoPorId = async (id) => {
+  try {
+    const respuesta = await axios.get(`${BASE_URL}/products/${id}`)
+    return respuesta.data
+  } catch (error) {
+    console.error('Error al obtener producto:', error)
+    throw error
+  }
+}
+
+// Trae todos los productos de una categoría específica
+export const obtenerProductosPorCategoria = async (categoria) => {
+  try {
+    const respuesta = await axios.get(
+      `${BASE_URL}/products/category/${categoria}`
+    )
+    return respuesta.data
+  } catch (error) {
+    console.error('Error al obtener productos por categoría:', error)
+    throw error
+  }
+}
+
+// Trae la lista de categorías disponibles en la API
+export const obtenerCategorias = async () => {
+  try {
+    const respuesta = await axios.get(`${BASE_URL}/products/categories`)
+    return respuesta.data
+  } catch (error) {
+    console.error('Error al obtener categorías:', error)
+    throw error
+  }
+}

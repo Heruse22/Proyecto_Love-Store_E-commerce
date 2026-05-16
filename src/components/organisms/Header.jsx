@@ -1,5 +1,11 @@
+import useCartStore from '../../store/cartStore'
 
-function Header({ totalItemsCarrito = 0 }) {
+function Header() {
+
+const totalItems = useCartStore(
+  state => state.items.reduce((total, item) => total + item.cantidad, 0)
+)
+
   return (
     <header style={{
       backgroundColor: 'var(--beige-fondo)',
@@ -48,7 +54,7 @@ function Header({ totalItemsCarrito = 0 }) {
         onMouseLeave={e => e.currentTarget.style.opacity = '1'}
       >
         <span>🛒</span>
-        <span>Carrito ({totalItemsCarrito})</span>
+        <span>Carrito ({totalItems})</span>
       </div>
 
     </header>
