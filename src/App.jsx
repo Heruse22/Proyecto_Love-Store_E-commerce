@@ -1,81 +1,55 @@
-// function App() {
-//   return (
-//     <div>
-//       <header style={{
-//         backgroundColor: 'var(--beige-fondo)',
-//         borderBottom: '3px solid var(--dorado)',
-//         padding: '16px 32px',
-//         display: 'flex',
-//         alignItems: 'center',
-//         gap: '16px'
-//       }}>
-//         <h1 style={{
-//           fontFamily: 'var(--fuente-titulo)',
-//           fontSize: '2rem',
-//           color: 'var(--marron-texto)'
-//         }}>
-//           🕯️ Love Store
-//         </h1>
-//       </header>
-
-//       <main style={{ padding: '32px', backgroundColor: 'var(--crema-claro)' }}>
-//         <p style={{ fontFamily: 'var(--fuente-cuerpo)' }}>
-//           ¡Proyecto React configurado con éxito! 🎉
-//         </p>
-//       </main>
-//     </div>
-//   )
-// }
-
-// export default App
-
-// src/App.jsx — Prueba temporal del mockdata
+import MainLayout from './components/templates/MainLayout'
+import ProductList from './components/organisms/ProductList'
+import SearchBar from './components/molecules/SearchBar'
 import MOCK_PRODUCTS from './mockdata/products'
 import CATEGORIAS from './mockdata/categories'
+import { useState } from 'react'
 
 function App() {
+    const [busqueda, setBusqueda] = useState('')
+    const [carrito, setCarrito] = useState([])
+
+    const agregarAlCarrito = (producto) => {
+        setCarrito(prev => [...prev, producto])
+        alert(`✅ "${productos.nombre || producto.title}" agregado al carrito.`)
+    }
+
+    const productosFiltrados = MOCK_PRODUCTS.filter(p => 
+        p.nombre.toLowerCase().includes(busqueda.toLowerCase()))
   return (
-    <div>
-      <header style={{
-        backgroundColor: 'var(--beige-fondo)',
-        borderBottom: '3px solid var(--dorado)',
-        padding: '16px 32px',
+    <MainLayout totalItemsCarrito={carrito.length}>
+
+      {/* Barra de búsqueda */}
+      <div style={{
+        padding: 'var(--espaciado-m) var(--espaciado-l)',
+        backgroundColor: 'var(--crema-claro)',
+        borderBottom: '1px solid var(--beige-fondo)',
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        flexWrap: 'wrap',
+        gap: 'var(--espaciado-m)',
       }}>
-        <h1 style={{
+        <h2 style={{
           fontFamily: 'var(--fuente-titulo)',
-          fontSize: '2rem',
-          color: 'var(--marron-texto)'
+          fontSize: '1.6rem',
+          color: 'var(--marron-texto)',
         }}>
-          🕯️ Love Store
-        </h1>
-      </header>
-
-      <main style={{ padding: '32px', backgroundColor: 'var(--crema-claro)' }}>
-
-        {/* Verificación de categorías */}
-        <h2 style={{ fontFamily: 'var(--fuente-titulo)', fontSize: '1.5rem', marginBottom: '12px' }}>
-          Categorías ({CATEGORIAS.length})
+          Catálogo Mes de las Madres 🌸
         </h2>
-        <ul style={{ marginBottom: '32px' }}>
-          {CATEGORIAS.map(cat => (
-            <li key={cat.id}>{cat.nombre} — {cat.descripcion}</li>
-          ))}
-        </ul>
+        <SearchBar
+          valor={busqueda}
+          onChange={e => setBusqueda(e.target.value)}
+        />
+      </div>
 
-        {/* Verificación de productos */}
-        <h2 style={{ fontFamily: 'var(--fuente-titulo)', fontSize: '1.5rem', marginBottom: '12px' }}>
-          Productos ({MOCK_PRODUCTS.length})
-        </h2>
-        <ul>
-          {MOCK_PRODUCTS.map(p => (
-            <li key={p.id}>
-              <strong>{p.nombre}</strong> — ${p.precio.toLocaleString('es-CO')} COP
-            </li>
-          ))}
-        </ul>
+      {/* Galería de productos */}
+      <ProductList
+        productos={productosFiltrados}
+        onAgregar={agregarAlCarrito}
+      />
 
-      </main>
-    </div>
+    </MainLayout>
   )
 }
 
