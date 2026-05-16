@@ -23,3 +23,14 @@ function agregarAlCarrito(id) {
 
     // Llamamos a la función para mostrar los prodcutos al crgar la página
     mostrarProductos();
+
+    tarjeta.innerHTML = `
+        <img src="${producto.image}" alt="${producto.title}" />
+        <div class="tarjeta-body">
+        <h3>${producto.title}</h3>
+        <span class="precio">$${producto.price}</span>
+        <button onclick="agregarAlCarrito(${producto.id})">Agregar al carrito</button>
+        </div>
+    `;
+
+    
