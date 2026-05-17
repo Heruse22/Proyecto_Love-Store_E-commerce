@@ -15,6 +15,10 @@ const useProductStore = create((set, get) => ({
 
   setCategoriaActiva: (categoria) => set({ categoriaActiva: categoria }),
 
+  limpiarFiltros: () => set({ busqueda: '',
+  categoriaActiva: 'todas'
+    }),
+
    // Carga productos desde FakeStore API
   // Si falla, usa mockdata de Love Store como respaldo
   cargarProductos: async () => {
