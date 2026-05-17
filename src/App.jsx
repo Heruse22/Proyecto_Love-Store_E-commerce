@@ -10,6 +10,7 @@ import useProductStore from './store/productStore'
 import useCartStore from './store/cartStore'
 import useDebounce from './hooks/useDebounce'
 import usePaginacion from './hooks/usePaginacion'
+import { useNavigate } from 'react-router-dom'
 
 function App() {
 
@@ -25,6 +26,7 @@ function App() {
     const cargarProductos = useProductStore(state => state.cargarProductos)
     const getProductosFiltrados = useProductStore(
     state => state.getProductosFiltrados)
+    const navigate = useNavigate()
 
     
 
@@ -148,7 +150,7 @@ function App() {
           onCerrar={() => setCarritoAbierto(false)}
           onCheckout={() => {
             setCarritoAbierto(false)
-            alert('🛒 Checkout próximamente — Paso 11')
+            navigate('/checkout')
           }}
         />
       )}

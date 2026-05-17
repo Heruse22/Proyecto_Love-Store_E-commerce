@@ -32,10 +32,12 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
-import './/styles/main.css'   // ← Aquí entran los estilos Love Store
+
+import './styles/main.css' 
 import App from './App.jsx'
 import Login from './pages/Login.jsx'
 import Registro from './pages/Registro.jsx'
+import Checkout from './pages/Checkout.jsx'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
@@ -47,6 +49,8 @@ createRoot(document.getElementById('root')).render(
         {/* Rutas de autenticación */}
         <Route path="/login" element={<Login />} />
         <Route path="/registro" element={<Registro />} />
+
+         <Route path="/checkout" element={<Checkout />} />
 
         {/* Cualquier ruta desconocida redirige al inicio */}
         <Route path="*" element={<Navigate to="/" replace />} />
