@@ -1,6 +1,7 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useMemo } from 'react'
 import MainLayout from './components/templates/MainLayout'
 import ProductList from './components/organisms/ProductList'
+import Paginacion from './components/organisms/Paginacion'
 import SearchBar from './components/molecules/SearchBar'
 import CategoryFilter from './components/molecules/CategoryFilter'
 import Cart from './components/organisms/Cart'
@@ -8,11 +9,12 @@ import ResultadosBusqueda from './components/atoms/ResultadosBusqueda'
 import useProductStore from './store/productStore'
 import useCartStore from './store/cartStore'
 import useDebounce from './hooks/useDebounce'
+import usePaginacion from './hooks/usePaginacion'
 
 function App() {
 
     const [carritoAbierto, setCarritoAbierto] = useState(false)
-    
+     const productos = useProductStore(state => state.productos)
     const busqueda = useProductStore(state => state.busqueda)
     const setBusqueda = useProductStore(state => state.setBusqueda)
     const categoriaActiva = useProductStore(state => state.categoriaActiva)
@@ -28,13 +30,37 @@ function App() {
 
     const agregarItem = useCartStore(state => state.agregarItem)
 
-    const busquedaDebounced = useDebounce(busqueda, 350)
+    const busquedaDebounced = useDebounce(busqueda, 250)
 
     useEffect(() => {
     cargarProductos()
     }, [])
 
-    const productosFiltrados = getProductosFiltrados()
+    const productosFiltrados = useMemo(() => {
+         return productos.filter(producto => {
+
+     const nombre = (producto.nombre || producto.title || '').toLowerCase()
+      const descripcion = (
+        producto.descripcion || producto.description || ''
+      ).toLowerCase()
+      const terminoLower = busquedaDebounced.toLowerCase()
+
+      const coincideTexto =
+        nombre.includes(terminoLower) ||
+        descripcion.includes(terminoLower)
+
+      const categoria = producto.categoria || producto.category || ''
+      const coincideCategoria =
+        categoriaActiva === 'todas' || categoria === categoriaActiva
+
+      return coincideTexto && coincideCategoria
+      })
+        }, [productos, busquedaDebounced, categoriaActiva])
+
+
+
+    // ── Paginación: 6 productos por página ──
+    const paginacion = usePaginacion(productosFiltrados, 6)
 
     const handleAgregarItem = (producto) => {
     agregarItem(producto)
@@ -93,12 +119,26 @@ function App() {
         categoria={categoriaActiva}
       />
 
-      {/* Galería de productos */}
+       {/* ── Galería paginada ── */}
       <ProductList
-        productos={productosFiltrados}
+        productos={paginacion.itemsPaginaActual}
         onAgregar={handleAgregarItem}
         cargando={cargando}
         error={error}
+      />
+
+      {/* ── Controles de paginación ── */}
+      <Paginacion
+        paginaActual={paginacion.paginaActual}
+        totalPaginas={paginacion.totalPaginas}
+        irAPagina={paginacion.irAPagina}
+        irAnterior={paginacion.irAnterior}
+        irSiguiente={paginacion.irSiguiente}
+        hayAnterior={paginacion.hayAnterior}
+        haySiguiente={paginacion.haySiguiente}
+        indiceInicio={paginacion.indiceInicio}
+        indiceFin={paginacion.indiceFin}
+        totalItems={paginacion.totalItems}
       />
       
 
