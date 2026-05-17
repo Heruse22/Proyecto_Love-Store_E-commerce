@@ -2,7 +2,7 @@
 import Header from '../organisms/Header'
 import Footer from '../organisms/Footer'
 
-function MainLayout({ children, totalItemsCarrito }) {
+function MainLayout({ children, onAbrirCarrito }) {
   return (
     <div style={{
       minHeight: '100vh',
@@ -10,7 +10,7 @@ function MainLayout({ children, totalItemsCarrito }) {
       flexDirection: 'column',
       backgroundColor: 'var(--crema-claro)',
     }}>
-      <Header totalItemsCarrito={totalItemsCarrito} />
+      <Header onAbrirCarrito={onAbrirCarrito} />
 
       <main style={{ flexGrow: 1 }}>
         {children}

@@ -1,6 +1,6 @@
 import useCartStore from '../../store/cartStore'
 
-function Header() {
+function Header({ onAbrirCarrito }) {
 
 const totalItems = useCartStore(
   state => state.items.reduce((total, item) => total + item.cantidad, 0)
@@ -36,15 +36,24 @@ const totalItems = useCartStore(
       </div>
 
       {/* Carrito */}
-      <div style={{
+      <div
+       onClick={onAbrirCarrito}
+       style={{
         display: 'flex',
         alignItems: 'center',
         gap: '8px',
         cursor: 'pointer',
         padding: '8px 16px',
         borderRadius: '8px',
-        backgroundColor: 'var(--rosa-vibrante)',
-        color: 'var(--crema-blanco)',
+        backgroundColor: totalItems > 0
+            ? 'var(--rosa-vibrante)'
+            : 'var(--beige-fondo)',
+        color: totalItems > 0
+            ? 'var(--crema-blanco)'
+            : 'var(--marron-texto)',
+        border: totalItems > 0
+            ? 'none'
+            : '2px solid var(--marron-texto)',
         fontFamily: 'var(--fuente-cuerpo)',
         fontWeight: '500',
         fontSize: '0.9rem',

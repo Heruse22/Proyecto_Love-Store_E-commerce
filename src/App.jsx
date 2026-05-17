@@ -1,15 +1,15 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import MainLayout from './components/templates/MainLayout'
 import ProductList from './components/organisms/ProductList'
 import SearchBar from './components/molecules/SearchBar'
-// import MOCK_PRODUCTS from './mockdata/products'
-// import CATEGORIAS from './mockdata/categories'
-// import { useState } from 'react'
+import Cart from './components/organisms/Cart'
 import useProductStore from './store/productStore'
 import useCartStore from './store/cartStore'
 
 function App() {
 
+    const [carritoAbierto, setCarritoAbierto] = useState(false)
+    
     const busqueda = useProductStore(state => state.busqueda)
     const setBusqueda = useProductStore(state => state.setBusqueda)
     const cargando = useProductStore(state => state.cargando)
@@ -19,21 +19,27 @@ function App() {
     state => state.getProductosFiltrados)
 
     
+
     const agregarItem = useCartStore(state => state.agregarItem)
-    const totalItems = useCartStore(
-    state => state.items.reduce((total, item) => total + item.cantidad, 0)
-        )
-    
-    // Carga los productos al montar la app
+
     useEffect(() => {
     cargarProductos()
     }, [])
-    
+
     const productosFiltrados = getProductosFiltrados()
+
+    const handleAgregarItem = (producto) => {
+    agregarItem(producto)
+    setCarritoAbierto(true)   // Abre el carrito al agregar un producto
+        }
+
+    // const totalItems = useCartStore(
+    // state => state.items.reduce((total, item) => total + item.cantidad, 0)
+    //     )
     
 
   return (
-    <MainLayout totalItemsCarrito={totalItems}>
+    <MainLayout onAbrirCarrito={() => setCarritoAbierto(true)}>
 
       {/* Barra de búsqueda */}
       <div style={{
@@ -62,10 +68,21 @@ function App() {
       {/* Galería de productos */}
       <ProductList
         productos={productosFiltrados}
-        onAgregar={agregarItem}
+        onAgregar={handleAgregarItem}
         cargando={cargando}
         error={error}
       />
+
+       {/* Panel lateral del carrito */}
+      {carritoAbierto && (
+        <Cart
+          onCerrar={() => setCarritoAbierto(false)}
+          onCheckout={() => {
+            setCarritoAbierto(false)
+            alert('🛒 Checkout próximamente — Paso 11')
+          }}
+        />
+      )}
 
     </MainLayout>
   )
