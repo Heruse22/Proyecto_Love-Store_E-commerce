@@ -1,4 +1,5 @@
 import { useEffect, useState, useMemo } from 'react'
+import { useNavigate } from 'react-router-dom'
 import MainLayout from './components/templates/MainLayout'
 import ProductList from './components/organisms/ProductList'
 import Paginacion from './components/organisms/Paginacion'
@@ -10,12 +11,15 @@ import useProductStore from './store/productStore'
 import useCartStore from './store/cartStore'
 import useDebounce from './hooks/useDebounce'
 import usePaginacion from './hooks/usePaginacion'
-import { useNavigate } from 'react-router-dom'
+import useResponsive from './hooks/useResponsive'
+
 
 function App() {
 
+    const navigate = useNavigate()
+    const { esMovil, esTablet } = useResponsive()
     const [carritoAbierto, setCarritoAbierto] = useState(false)
-     const productos = useProductStore(state => state.productos)
+    const productos = useProductStore(state => state.productos)
     const busqueda = useProductStore(state => state.busqueda)
     const setBusqueda = useProductStore(state => state.setBusqueda)
     const categoriaActiva = useProductStore(state => state.categoriaActiva)
@@ -26,8 +30,7 @@ function App() {
     const cargarProductos = useProductStore(state => state.cargarProductos)
     const getProductosFiltrados = useProductStore(
     state => state.getProductosFiltrados)
-    const navigate = useNavigate()
-
+    
     
 
     const agregarItem = useCartStore(state => state.agregarItem)
@@ -61,8 +64,8 @@ function App() {
 
 
 
-    // ── Paginación: 6 productos por página ──
-    const paginacion = usePaginacion(productosFiltrados, 6)
+    const productosPorPagina = esMovil ? 4 : esTablet ? 6 : 6
+    const paginacion = usePaginacion(productosFiltrados, productosPorPagina)
 
     const handleAgregarItem = (producto) => {
     agregarItem(producto)
@@ -74,7 +77,9 @@ function App() {
 
       {/* Barra de búsqueda */}
       <div style={{
-        padding: 'var(--espaciado-m) var(--espaciado-l)',
+       padding: esMovil
+          ? 'var(--espaciado-m)'
+          : 'var(--espaciado-m) var(--espaciado-l)',
         backgroundColor: 'var(--crema-claro)',
         borderBottom: '1px solid var(--beige-fondo)',
         display: 'flex',
@@ -86,25 +91,29 @@ function App() {
         {/* Título + SearchBar */}
         <div style={{
           display: 'flex',
+          flexDirection: esMovil ? 'column' : 'row',
           justifyContent: 'space-between',
-          alignItems: 'center',
+          alignItems: esMovil ? 'flex-start' : 'center',
           flexWrap: 'wrap',
           gap: 'var(--espaciado-m)',
         }}>
 
         <h2 style={{
-          fontFamily: 'var(--fuente-titulo)',
-          fontSize: '1.6rem',
-          color: 'var(--marron-texto)',
-        }}>
-          Catálogo Mes de las Madres 🌸
-        </h2>
-        <SearchBar
-          valor={busqueda}
-            onChange={e => setBusqueda(e.target.value)}
-            onLimpiar={limpiarFiltros}
-        />
-      </div>
+            fontFamily: 'var(--fuente-titulo)',
+            fontSize: esMovil ? '1.3rem' : '1.6rem',
+            color: 'var(--marron-texto)',
+          }}>
+            Catálogo Mes de las Madres 🌸
+          </h2>
+          <div style={{ width: esMovil ? '100%' : 'auto' }}>
+            <SearchBar
+              valor={busqueda}
+              onChange={e => setBusqueda(e.target.value)}
+              onLimpiar={limpiarFiltros}
+            />
+          </div>
+        </div>
+
 
           {/* Filtros de categoría */}
         <CategoryFilter

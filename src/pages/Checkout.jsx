@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import useCartStore from '../store/cartStore'
 import useAuthStore from '../store/authStore'
+import useResponsive from '../hooks/useResponsive'
 
 function Checkout() {
 
@@ -12,6 +13,7 @@ function Checkout() {
   const vaciarCarrito = useCartStore(state => state.vaciarCarrito)
   const usuario = useAuthStore(state => state.usuario)
   const estaLogueado = useAuthStore(state => state.estaLogueado)
+  const { esMovil } = useResponsive()
 
 
   const [pedidoConfirmado, setPedidoConfirmado] = useState(false)
@@ -350,19 +352,53 @@ function Checkout() {
       <div style={{
         maxWidth: '1100px',
         margin: '0 auto',
-        padding: 'var(--espaciado-l)',
+       padding: esMovil
+        ? 'var(--espaciado-m)'
+        : 'var(--espaciado-l)',
         display: 'grid',
-        gridTemplateColumns: '1fr 380px',
+        gridTemplateColumns: esMovil ? '1fr' : '1fr 380px',
         gap: 'var(--espaciado-l)',
         alignItems: 'start',
       }}>
+
+        {/* Resumen del pedido primero en móvil */}
+  {esMovil && (
+    <div style={{
+      backgroundColor: 'var(--crema-blanco)',
+      borderRadius: 'var(--radio-tarjeta)',
+      boxShadow: 'var(--sombra-suave)',
+      padding: 'var(--espaciado-m)',
+      border: '1px solid rgba(201, 181, 160, 0.4)',
+      order: -1,
+    }}>
+      <h3 style={{
+        fontFamily: 'var(--fuente-titulo)',
+        fontSize: '1.2rem',
+        color: 'var(--marron-texto)',
+        marginBottom: 'var(--espaciado-m)',
+      }}>
+        🧾 Resumen — {formatearPrecio(totalPrecio)}
+      </h3>
+      <p style={{
+        fontFamily: 'var(--fuente-cuerpo)',
+        fontSize: '0.85rem',
+        color: 'var(--marron-texto)',
+        opacity: '0.65',
+      }}>
+        {totalUnidades} producto{totalUnidades !== 1 ? 's' : ''} · Envío gratis en Medellín 🎉
+      </p>
+    </div>
+  )}
+
 
         {/* ── Formulario de entrega ── */}
         <div style={{
           backgroundColor: 'var(--crema-blanco)',
           borderRadius: 'var(--radio-tarjeta)',
           boxShadow: 'var(--sombra-suave)',
-          padding: 'var(--espaciado-l)',
+          padding: esMovil
+      ? 'var(--espaciado-m)'
+      : 'var(--espaciado-l)',
           border: '1px solid rgba(201, 181, 160, 0.4)',
         }}>
 
@@ -598,6 +634,8 @@ function Checkout() {
         }}>
 
           {/* Tarjeta de resumen */}
+
+          
           <div style={{
             backgroundColor: 'var(--crema-blanco)',
             borderRadius: 'var(--radio-tarjeta)',

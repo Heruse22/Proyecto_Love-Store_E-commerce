@@ -1,9 +1,11 @@
 
 import ProductCard from '../molecules/ProductCard'
 import Spinner from '../atoms/Spinner'
+import useResponsive from '../../hooks/useResponsive'
 
 function ProductList({ productos, onAgregar, cargando, error  }) {
-
+    const { esMovil, esTablet } = useResponsive()
+    const columnas = esMovil ? 1 : esTablet ? 2 : 3
 
   // Estado de carga
   if (cargando) {
@@ -53,7 +55,9 @@ function ProductList({ productos, onAgregar, cargando, error  }) {
         fontSize: '0.85rem',
         color: 'var(--marron-texto)',
         opacity: '0.6',
-        padding: '0 var(--espaciado-l)',
+         padding: esMovil
+          ? '0 var(--espaciado-m)'
+          : '0 var(--espaciado-l)',
         marginTop: 'var(--espaciado-m)',
       }}>
         {productos.length} producto{productos.length !== 1 ? 's' : ''} encontrado{productos.length !== 1 ? 's' : ''}
@@ -62,9 +66,13 @@ function ProductList({ productos, onAgregar, cargando, error  }) {
 
     <div style={{
       display: 'grid',
-      gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))',
-      gap: 'var(--espaciado-l)',
-      padding: 'var(--espaciado-l)',
+      gridTemplateColumns: `repeat(${columnas}, minmax(260px, 1fr))`,
+       gap: esMovil
+          ? 'var(--espaciado-m)'
+          : 'var(--espaciado-l)',
+        padding: esMovil
+          ? 'var(--espaciado-m)'
+          : 'var(--espaciado-m) var(--espaciado-l) var(--espaciado-l)',
       maxWidth: '1200px',
       margin: '0 auto',
     }}>

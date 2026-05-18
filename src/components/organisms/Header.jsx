@@ -28,6 +28,7 @@ const totalItems = useCartStore(
     backgroundColor: 'var(--crema-blanco)',
     transition: 'all 0.2s ease',
     cursor: 'pointer',
+    whiteSpace: 'nowrap',
   }
 
 
@@ -35,54 +36,75 @@ const totalItems = useCartStore(
     <header style={{
       backgroundColor: 'var(--beige-fondo)',
       borderBottom: '3px solid var(--dorado)',
-      padding: '0 var(--espaciado-l)',
+      padding: esMovil
+        ? '0 var(--espaciado-m)'
+        : '0 var(--espaciado-l)',
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'space-between',
-      height: '70px',
+      height: esMovil ? '60px' : '70px',
       position: 'sticky',
       top: 0,
       zIndex: 100,
       boxShadow: 'var(--sombra-suave)',
       gap: 'var(--espaciado-m)',
-      flexWrap: 'wrap',
+      
     }}>
 
       {/* Logo + Nombre */}
-       <Link to="/" style={{ textDecoration: 'none' }}></Link>
+       <Link to="/" style={{ textDecoration: 'none', flexShrink: 0  }}></Link>
       <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
         <a href="/"><img src=".../src/assets/img/logo_love_store.webp" alt="Logo Love Store" style={{ height: '50px' }} /></a>
-        <h1 style={{
-          fontFamily: 'var(--fuente-titulo)',
-          fontSize: '1.8rem',
-          fontWeight: '600',
-          color: 'var(--marron-texto)',
-          letterSpacing: '0.05em',
-        }}>
-          Love Store
-        </h1>
+        <span style={{ fontSize: esMovil ? '1.5rem' : '1.8rem' }}>
+            🕯️
+          </span>
+
+
+        {!esMovil && (
+            <h1 style={{
+              fontFamily: 'var(--fuente-titulo)',
+              fontSize: esTablet ? '1.4rem' : '1.8rem',
+              fontWeight: '600',
+              color: 'var(--marron-texto)',
+              letterSpacing: '0.05em',
+            }}>
+              Love Store
+            </h1>
+          )}
+          {esMovil && (
+            <h1 style={{
+              fontFamily: 'var(--fuente-titulo)',
+              fontSize: '1.2rem',
+              fontWeight: '600',
+              color: 'var(--marron-texto)',
+            }}>
+              Love Store
+            </h1>
+          )}
       </div>
 
        {/* Navegación derecha */}
       <div style={{
         display: 'flex',
         alignItems: 'center',
-        gap: '10px',
+         gap: esMovil ? '6px' : '10px',
       }}>
 
         {estaLogueado ? (
           <>
-            {/* Saludo al usuario */}
-            <span style={{
-              fontFamily: 'var(--fuente-cuerpo)',
-              fontSize: '0.88rem',
-              color: 'var(--marron-texto)',
-              opacity: '0.75',
-            }}>
-              👤 {usuario?.nombre}
-            </span>
+            {/* En desktop muestra el nombre, en móvil solo el ícono */}
+            {!esMovil && (
+              <span style={{
+                fontFamily: 'var(--fuente-cuerpo)',
+                fontSize: '0.85rem',
+                color: 'var(--marron-texto)',
+                opacity: '0.75',
+                whiteSpace: 'nowrap',
+              }}>
+                👤 {usuario?.nombre}
+              </span>
+            )}
 
-            {/* Botón cerrar sesión */}
             <button
               onClick={logout}
               style={{
@@ -100,12 +122,11 @@ const totalItems = useCartStore(
                 e.currentTarget.style.color = 'var(--rosa-vibrante)'
               }}
             >
-              Cerrar sesión
+              {esMovil ? '✕' : 'Cerrar sesión'}
             </button>
           </>
         ) : (
           <>
-            {/* Link login */}
             <Link
               to="/login"
               style={estiloLinkNav}
@@ -118,23 +139,25 @@ const totalItems = useCartStore(
                 e.currentTarget.style.color = 'var(--marron-texto)'
               }}
             >
-              Iniciar sesión
+              {esMovil ? 'Login' : 'Iniciar sesión'}
             </Link>
 
-            {/* Link registro */}
-            <Link
-              to="/registro"
-              style={{
-                ...estiloLinkNav,
-                backgroundColor: 'var(--morado)',
-                color: 'var(--crema-blanco)',
-                border: 'none',
-              }}
-              onMouseEnter={e => e.currentTarget.style.opacity = '0.88'}
-              onMouseLeave={e => e.currentTarget.style.opacity = '1'}
-            >
-              Registrarse
-            </Link>
+            {/* Registro solo visible en tablet y desktop */}
+            {!esMovil && (
+              <Link
+                to="/registro"
+                style={{
+                  ...estiloLinkNav,
+                  backgroundColor: 'var(--morado)',
+                  color: 'var(--crema-blanco)',
+                  border: 'none',
+                }}
+                onMouseEnter={e => e.currentTarget.style.opacity = '0.88'}
+                onMouseLeave={e => e.currentTarget.style.opacity = '1'}
+              >
+                Registrarse
+              </Link>
+            )}
           </>
         )}
 
@@ -144,9 +167,9 @@ const totalItems = useCartStore(
           style={{
             display: 'flex',
             alignItems: 'center',
-            gap: '6px',
+            gap: '5px',
             cursor: 'pointer',
-            padding: '8px 14px',
+            padding: esMovil ? '6px 10px' : '8px 14px',
             borderRadius: '8px',
             backgroundColor: totalItems > 0
               ? 'var(--rosa-vibrante)'
@@ -158,14 +181,15 @@ const totalItems = useCartStore(
               ? 'none'
               : '1px solid var(--beige-fondo)',
             fontFamily: 'var(--fuente-cuerpo)',
-            fontWeight: '500',
-            fontSize: '0.88rem',
+            fontWeight: '600',
+            fontSize: esMovil ? '0.85rem' : '0.88rem',
             transition: 'all 0.25s ease',
+            whiteSpace: 'nowrap',
           }}
           onMouseEnter={e => e.currentTarget.style.opacity = '0.85'}
           onMouseLeave={e => e.currentTarget.style.opacity = '1'}
         >
-          🛒 ({totalItems})
+          🛒 {totalItems > 0 && `(${totalItems})`}
         </div>
 
       </div>

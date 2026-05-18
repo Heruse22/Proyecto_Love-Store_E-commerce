@@ -1,6 +1,7 @@
 import CartItem from '../molecules/CartItem'
 import Button from '../atoms/Button'
 import useCartStore from '../../store/cartStore'
+import useResponsive from '../../hooks/useResponsive'
 
 function Cart({ onCerrar, onCheckout }) {
 
@@ -10,6 +11,7 @@ function Cart({ onCerrar, onCheckout }) {
   const reducirCantidad = useCartStore(state => state.reducirCantidad)
   const quitarItem = useCartStore(state => state.quitarItem)
   const vaciarCarrito = useCartStore(state => state.vaciarCarrito)
+  const { esMovil } = useResponsive()
 
   // Total calculado directamente desde items
   const totalPrecio = useCartStore(state =>
@@ -49,7 +51,7 @@ function Cart({ onCerrar, onCheckout }) {
         top: 0,
         right: 0,
         width: '100%',
-        maxWidth: '480px',
+        maxWidth: esMovil ? '100%' : '480px',
         height: '100vh',
         backgroundColor: 'var(--crema-claro)',
         zIndex: 201,

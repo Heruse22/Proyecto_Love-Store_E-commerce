@@ -1,16 +1,22 @@
+import useResponsive from '../../hooks/useResponsive'
+
 function Footer() {
+  const { esMovil } = useResponsive()
+
   return (
     <footer style={{
       backgroundColor: 'var(--marron-texto)',
       color: 'var(--crema-blanco)',
-      padding: 'var(--espaciado-l)',
+      padding: esMovil
+        ? 'var(--espaciado-m)'
+        : 'var(--espaciado-l)',
       textAlign: 'center',
       marginTop: 'auto',
     }}>
 
       <p style={{
         fontFamily: 'var(--fuente-titulo)',
-        fontSize: '1.4rem',
+        fontSize: esMovil ? '1.2rem' : '1.4rem',
         marginBottom: '8px',
         letterSpacing: '0.05em',
       }}>
@@ -28,8 +34,8 @@ function Footer() {
 
       <div style={{
         display: 'flex',
-        justifyContent: 'center',
-        gap: 'var(--espaciado-l)',
+         flexDirection: esMovil ? 'column' : 'row',
+        gap: esMovil ? '6px' : 'var(--espaciado-l)',
         fontFamily: 'var(--fuente-cuerpo)',
         fontSize: '0.9rem',
       }}>
