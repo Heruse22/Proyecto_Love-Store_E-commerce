@@ -1,14 +1,18 @@
 import { Link } from 'react-router-dom'
 import useCartStore from '../../store/cartStore'
 import useAuthStore from '../../store/authStore'
+import useResponsive from '../../hooks/useResponsive'
+
 
 function Header({ onAbrirCarrito }) {
+
+const { esMovil, esTablet } = useResponsive()
 
 const totalItems = useCartStore(
   state => state.items.reduce((total, item) => total + item.cantidad, 0)
 )
 
-    const usuario = useAuthStore(state => state.usuario)
+  const usuario = useAuthStore(state => state.usuario)
   const estaLogueado = useAuthStore(state => state.estaLogueado)
   const logout = useAuthStore(state => state.logout)
 
