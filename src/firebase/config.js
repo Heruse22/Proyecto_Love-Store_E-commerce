@@ -3,12 +3,12 @@ import { getAuth } from 'firebase/auth'
 import { getFirestore } from 'firebase/firestore'
 
 const firebaseConfig = {
-  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
-  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
-  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
-  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
-  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
-  appId: import.meta.env.VITE_FIREBASE_APP_ID,
+  apiKey: "AIzaSyC4g_6LtEaoRL5RFGSCrXLrQbTdeHsrGGs",
+  authDomain: "love-store-39600.firebaseapp.com",
+  projectId: "love-store-39600",
+  storageBucket: "love-store-39600.firebasestorage.app",
+  messagingSenderId: "485514271529",
+  appId: "1:485514271529:web:d86a300f2e498b2e4b3538"
 }
 ;
 
