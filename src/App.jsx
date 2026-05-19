@@ -12,6 +12,7 @@ import useCartStore from './store/cartStore'
 import useDebounce from './hooks/useDebounce'
 import usePaginacion from './hooks/usePaginacion'
 import useResponsive from './hooks/useResponsive'
+import { seedProductos } from './firebase/productosService'
 
 
 function App() {
@@ -122,6 +123,32 @@ function App() {
         />
 
       </div>
+
+      <div style={{ textAlign: 'center', padding: '8px' }}>
+  
+  {/* Boton para subir productos a Firestore (solo usar una vez, luego comentar o eliminar)
+  <button
+    onClick={async () => {
+      const resultado = await seedProductos()
+      if (resultado.exito) {
+        alert('✅ Productos cargados en Firestore')
+      }
+    }}
+    style={{
+      padding: '8px 16px',
+      backgroundColor: 'var(--dorado)',
+      color: 'var(--crema-blanco)',
+      border: 'none',
+      borderRadius: '6px',
+      cursor: 'pointer',
+      fontFamily: 'var(--fuente-cuerpo)',
+      fontSize: '0.85rem',
+    }}
+  >
+    🌱 Cargar productos a Firestore (solo una vez)
+  </button> */}
+  
+</div>
 
       {/* ── Contador de resultados ── */}
       <ResultadosBusqueda

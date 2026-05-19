@@ -1,6 +1,4 @@
-// Usuarios de prueba:
-//   patricia@lovestore.com / lovestore2026
-//   cliente@demo.com / cliente123
+
 
 import { useState, useEffect } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
@@ -29,16 +27,17 @@ function Login() {
     if (error) limpiarError()
   }
 
-  const handleSubmit = (e) => {
-    e.preventDefault()
-    setCargando(true)
+  const handleSubmit = async (e) => {
+  e.preventDefault()
+  setCargando(true)
+
 
     // Simula un pequeño delay de autenticación
-    setTimeout(() => {
-      const resultado = login(form.email, form.password)
-      setCargando(false)
-      if (resultado.exito) navigate('/')
-    }, 500)
+    const resultado = await login(form.email, form.password)
+  setCargando(false)
+
+  if (resultado.exito) navigate('/')
+
   }
 
   return (

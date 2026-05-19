@@ -1,6 +1,11 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
-import MOCK_USERS from '../mockdata/users'
+import {
+  registrarUsuario,
+  iniciarSesion,
+  cerrarSesion,
+  escucharAuth
+} from '../firebase/authService'
 
 const useAuthStore = create(
   persist(
@@ -9,63 +14,50 @@ const useAuthStore = create(
       usuario: null,       // Datos del usuario logueado
       estaLogueado: false, // Bandera de sesión activa
       error: null,         // Mensaje de error en login
+      inicializado: false, // Bandera: Firebase ya verificó la sesión
 
      
-      // Valida credenciales contra el mockdata de usuarios
-      login: (email, password) => {
-        const encontrado = MOCK_USERS.find(
-          u => u.email === email && u.password === password
-        )
+  // Inicia sesión con Firebase Authentication
+      login: async (email, password) => {
+        set({ error: null })
 
-        if (encontrado) {
-          // Guarda el usuario sin la contraseña por seguridad
-          const { password: _, ...usuarioSeguro } = encontrado
+        const resultado = await iniciarSesion(email, password)
+
+        if (resultado.exito) {
           set({
-            usuario: usuarioSeguro,
+            usuario: resultado.usuario,
             estaLogueado: true,
             error: null
           })
           return { exito: true }
         }
 
-        set({ error: 'Correo o contraseña incorrectos' })
+        set({ error: resultado.error })
         return { exito: false }
       },
 
-      // Registra un nuevo usuario y lo guarda en el store
-      registro: (nombre, email, password) => {
+      // Registra usuario en Firebase Authentication + Firestore
+      registro: async (nombre, email, password) => {
+        set({ error: null })
 
-        // Verifica si el email ya existe
-        const existe = MOCK_USERS.find(u => u.email === email)
-        if (existe) {
-          set({ error: 'Este correo ya está registrado' })
-          return { exito: false }
+        const resultado = await registrarUsuario(nombre, email, password)
+
+        if (resultado.exito) {
+          set({
+            usuario: resultado.usuario,
+            estaLogueado: true,
+            error: null
+          })
+          return { exito: true }
         }
 
-        // Crea el nuevo usuario
-        const nuevoUsuario = {
-          id: Date.now(),
-          nombre,
-          email,
-          rol: 'cliente',
-          ciudad: 'Colombia'
-        }
-
-        // Agrega al mockdata en memoria
-        MOCK_USERS.push({ ...nuevoUsuario, password })
-
-        // Inicia sesión automáticamente después del registro
-        set({
-          usuario: nuevoUsuario,
-          estaLogueado: true,
-          error: null
-        })
-
-        return { exito: true }
+        set({ error: resultado.error })
+        return { exito: false }
       },
 
-      // Cierra la sesión del usuario
-      logout: () => {
+      // Cierra sesión en Firebase
+      logout: async () => {
+        await cerrarSesion()
         set({
           usuario: null,
           estaLogueado: false,
@@ -73,14 +65,34 @@ const useAuthStore = create(
         })
       },
 
-      // Limpia el mensaje de error
+      // Sincroniza el estado con Firebase Auth al cargar la app
+      // Firebase recuerda la sesión automáticamente
+      inicializarAuth: () => {
+        const unsubscribe = escucharAuth((usuarioFirebase) => {
+          if (usuarioFirebase) {
+            set({
+              usuario: usuarioFirebase,
+              estaLogueado: true,
+              inicializado: true
+            })
+          } else {
+            set({
+              usuario: null,
+              estaLogueado: false,
+              inicializado: true
+            })
+          }
+        })
+
+        // Devuelve la función de cleanup para useEffect
+        return unsubscribe
+      },
+
       limpiarError: () => set({ error: null })
     }),
 
-    
     {
-      name: 'love-store-sesion', // Clave en localStorage
-      // Solo persiste usuario y estaLogueado, no el error
+      name: 'love-store-sesion-firebase',
       partialize: (state) => ({
         usuario: state.usuario,
         estaLogueado: state.estaLogueado

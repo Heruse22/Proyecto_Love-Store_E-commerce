@@ -30,28 +30,26 @@ function Registro() {
     if (error) limpiarError()
   }
 
-  const handleSubmit = (e) => {
-    e.preventDefault()
+  const handleSubmit = async (e) => {
+  e.preventDefault()
 
-    // Validación local de contraseñas
-    if (form.password !== form.confirmar) {
-      setErrorLocal('Las contraseñas no coinciden')
-      return
-    }
-
-    if (form.password.length < 6) {
-      setErrorLocal('La contraseña debe tener al menos 6 caracteres')
-      return
-    }
-
-    setCargando(true)
-
-    setTimeout(() => {
-      const resultado = registro(form.nombre, form.email, form.password)
-      setCargando(false)
-      if (resultado.exito) navigate('/')
-    }, 500)
+  if (form.password !== form.confirmar) {
+    setErrorLocal('Las contraseñas no coinciden')
+    return
   }
+  if (form.password.length < 6) {
+    setErrorLocal('La contraseña debe tener al menos 6 caracteres')
+    return
+  }
+
+  setCargando(true)
+
+  // ✅ Ahora await porque Firebase es asíncrono
+  const resultado = await registro(form.nombre, form.email, form.password)
+  setCargando(false)
+
+  if (resultado.exito) navigate('/')
+}
 
   const mensajeError = errorLocal || error
 
