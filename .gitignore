@@ -1,27 +1,21 @@
-# Logs
-logs
-*.log
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-pnpm-debug.log*
-lerna-debug.log*
+# .gitignore
 
-node_modules
-dist
-dist-ssr
-*.local
+# Dependencias
+node_modules/
 
-# Editor directories and files
-.vscode/*
-!.vscode/extensions.json
-.idea
+# Build
+dist/
+
+# Variables de entorno — NUNCA subir a GitHub
+.env
+.env.local
+.env.production
+.env.*.local
+
+# Editor
+.vscode/
+.idea/
+
+# Sistema operativo
 .DS_Store
-*.suo
-*.ntvs*
-*.njsproj
-*.sln
-*.sw?
-
-src/firebase/firebase.config.js
-.agents
+Thumbs.db
