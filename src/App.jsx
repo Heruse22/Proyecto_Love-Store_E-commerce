@@ -28,18 +28,24 @@ function App() {
     const limpiarFiltros = useProductStore(state => state.limpiarFiltros)
     const cargando = useProductStore(state => state.cargando)
     const error = useProductStore(state => state.error)
-    const cargarProductos = useProductStore(state => state.cargarProductos)
     const getProductosFiltrados = useProductStore(
     state => state.getProductosFiltrados)
+    const cargarProductosFirestore = useProductStore(
+    state => state.cargarProductosFirestore
+    )
+
+      useEffect(() => {
+    cargarProductosFirestore()
+      }, [])
     
-    
+
 
     const agregarItem = useCartStore(state => state.agregarItem)
 
     const busquedaDebounced = useDebounce(busqueda, 250)
 
     useEffect(() => {
-    cargarProductos()
+    cargarProductosFirestore()
     }, [])
 
     const productosFiltrados = useMemo(() => {
